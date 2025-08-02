@@ -19,7 +19,7 @@ const noteSchema = new mongoose.Schema({
 const Note = mongoose.model("Note", noteSchema);
 
 const note = new Note({
-  content: "GET and POST are the most important methods of HTTP protocol",
+  content: "Debugging is an art",
   important: true,
 });
 
