@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const Note = require("./models/note");
 
 let notes = [
   {
@@ -35,8 +36,9 @@ app.get("/", (request, response) => {
   response.send("<h1>Hello World!</h1>");
 });
 
-app.get("/api/notes", (request, response) => {
-  response.json(notes);
+app.get("/api/notes", async (request, response) => {
+  const findNotes = await Note.find({});
+  response.json(findNotes);
 });
 
 app.get("/api/notes/:id", (request, response) => {

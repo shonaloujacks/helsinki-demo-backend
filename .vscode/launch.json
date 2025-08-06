@@ -10,7 +10,8 @@
       "name": "Launch Program",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/index.js",
-      "runtimeExecutable": "/home/sljackson/.nvm/versions/node/v20.16.0/bin/node"
+      "console": "integratedTerminal"
+      // "runtimeExecutable": "/home/sljackson/.nvm/versions/node/v20.16.0/bin/node"
     }
   ]
 }
