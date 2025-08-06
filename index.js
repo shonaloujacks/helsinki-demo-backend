@@ -3,23 +3,7 @@ const express = require("express");
 const Note = require("./models/note");
 const app = express();
 
-let notes = [
-  {
-    id: "1",
-    content: "HTML is easy",
-    important: true,
-  },
-  {
-    id: "2",
-    content: "Browser can execute only JavaScript",
-    important: false,
-  },
-  {
-    id: "3",
-    content: "GET and POST are the most important methods of HTTP protocol",
-    important: true,
-  },
-];
+let notes = [];
 
 const requestLogger = (request, response, next) => {
   console.log("Method:", request.method);
@@ -42,9 +26,8 @@ app.get("/api/notes", async (request, response) => {
   response.json(findNotes);
 });
 
-app.get("/api/notes/:id", (request, response) => {
-  const id = request.params.id;
-  const note = notes.find((note) => note.id === id);
+app.get("/api/notes/:id", async (request, response) => {
+  const note = await Note.findById(request.params.id);
 
   if (note) {
     response.json(note);
@@ -53,20 +36,14 @@ app.get("/api/notes/:id", (request, response) => {
   }
 });
 
-app.delete("/api/notes/:id", (request, response) => {
+app.delete("/api/notes/:id", async (request, response) => {
   const id = request.params.id;
   notes = notes.filter((note) => note.id !== id);
 
   response.status(204).end();
 });
 
-const generateID = () => {
-  const maxID =
-    notes.length > 0 ? Math.max(...notes.map((note) => Number(note.id))) : 0;
-  return String(maxID + 1);
-};
-
-app.post("/api/notes", (request, response) => {
+app.post("/api/notes", async (request, response) => {
   const body = request.body;
 
   if (!body.content) {
@@ -75,14 +52,13 @@ app.post("/api/notes", (request, response) => {
     });
   }
 
-  const note = {
+  const note = new Note({
     content: body.content,
     important: body.important || false,
-    id: generateID(),
-  };
+  });
 
-  notes = notes.concat(note);
-  response.json(note);
+  const savedNote = await note.save();
+  response.json(savedNote);
 });
 
 const unknownEndpoint = (request, response) => {
