@@ -27,12 +27,16 @@ app.get("/api/notes", async (request, response) => {
 });
 
 app.get("/api/notes/:id", async (request, response) => {
-  const note = await Note.findById(request.params.id);
-
-  if (note) {
-    response.json(note);
-  } else {
-    response.status(404).end();
+  try {
+    const note = await Note.findById(request.params.id);
+    if (note) {
+      response.json(note);
+    } else {
+      response.status(404).end();
+    }
+  } catch (error) {
+    console.log(error);
+    response.status(400).send({ error: "malformatted id" });
   }
 });
 
