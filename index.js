@@ -3,6 +3,10 @@ const express = require("express");
 const Note = require("./models/note");
 const app = express();
 
+app.use(express.static("dist"));
+app.use(express.json());
+app.use(requestLogger);
+
 let notes = [];
 
 const requestLogger = (request, response, next) => {
@@ -13,10 +17,6 @@ const requestLogger = (request, response, next) => {
   next();
 };
 
-app.use(express.json());
-app.use(requestLogger);
-app.use(express.static("dist"));
-
 app.get("/", (request, response) => {
   response.send("<h1>Hello World!</h1>");
 });
@@ -26,7 +26,7 @@ app.get("/api/notes", async (request, response) => {
   response.json(findNotes);
 });
 
-app.get("/api/notes/:id", async (request, response) => {
+app.get("/api/notes/:id", async (request, response, next) => {
   try {
     const note = await Note.findById(request.params.id);
     if (note) {
@@ -35,8 +35,7 @@ app.get("/api/notes/:id", async (request, response) => {
       response.status(404).end();
     }
   } catch (error) {
-    console.log(error);
-    response.status(400).send({ error: "malformatted id" });
+    next(error);
   }
 });
 
@@ -70,6 +69,17 @@ const unknownEndpoint = (request, response) => {
 };
 
 app.use(unknownEndpoint);
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
