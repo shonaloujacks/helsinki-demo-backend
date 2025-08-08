@@ -17,7 +17,7 @@ connectToMongoDB();
 const noteSchema = new mongoose.Schema({
   content: {
     type: String,
-    minLenght: 5,
+    minLength: 5,
     required: true,
   },
   important: Boolean,
