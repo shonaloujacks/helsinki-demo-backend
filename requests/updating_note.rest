@@ -2,6 +2,6 @@ PUT http://localhost:3001/api/notes/6894bdd8d08243f4235057b4
 content-type: application/json
 
 {
-    "content": "Wow Shobie cool",
+    "content": "Wow Shobie wow3",
     "important": false
 }

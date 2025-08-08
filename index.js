@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const Note = require("./models/note");
-const note = require("./models/note");
 const app = express();
 
 let notes = [];
@@ -10,6 +9,7 @@ const requestLogger = (request, response, next) => {
   console.log("Method:", request.method);
   console.log("Path:  ", request.path);
   console.log("Body:  ", request.body);
+
   console.log("---");
   next();
 };
