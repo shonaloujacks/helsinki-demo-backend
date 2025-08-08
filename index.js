@@ -52,7 +52,7 @@ app.delete("/api/notes/:id", async (request, response) => {
 app.put("/api/notes/:id", async (request, response, next) => {
   const { content, important } = request.body;
   try {
-    note = await Note.findById(request.params.id);
+    let note = await Note.findById(request.params.id);
     if (!note) {
       return response.status(404).end();
     }
