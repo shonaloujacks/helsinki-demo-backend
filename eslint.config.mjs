@@ -15,7 +15,7 @@ export default [
       '@stylistic/js': stylisticJs,
     },
     rules: {
-      '@stylistic/js/indent': ['error', 2],
+      '@stylistic/js/indent': ['error', 2, { "FunctionExpression": { "body": 1 }, "FunctionDeclaration": { "body": 1 } }],
       '@stylistic/js/linebreak-style': ['error', 'unix'],
       '@stylistic/js/quotes': ['error', 'single'],
       '@stylistic/js/semi': ['error', 'never'],
@@ -24,6 +24,7 @@ export default [
       'object-curly-spacing': ['error', 'always'],
       'arrow-spacing': ['error', { before: true, after: true }],
       'no-console': 'off',
+
     },
   },
   {
