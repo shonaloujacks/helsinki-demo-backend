@@ -64,9 +64,26 @@ describe('when there are initially some notes saved', () => {
 
   describe('addition of a new note', () => {
     test('succeeds with valid data', async () => {
+
+      const newUser = {
+        username: 'shobieshoberson',
+        name: 'Shobie Shoberson',
+        password: 'testpassword'
+      }
+
+      const userResponse = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+      console.log('THIS IS USERRESPONSE', userResponse)
+      const userId = userResponse.body.id
+
+
       const newNote = {
         content: 'async/await simplifies making async calls',
         important: true,
+        userId
       }
 
       await api

@@ -2,7 +2,7 @@ POST http://localhost:3001/api/notes/
 content-type: application/json
 
 {
-    "content": "Use id of the note creator is at the start sent along the request",
+    "content": "The saltRounds parameter determines how many times the key expansion step is repeated internally",
     "important": true,
     "userId": "68af1414bd545337fd15f013"
 }
