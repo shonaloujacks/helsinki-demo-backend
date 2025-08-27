@@ -76,7 +76,6 @@ describe('when there are initially some notes saved', () => {
         .send(newUser)
         .expect(201)
         .expect('Content-Type', /application\/json/)
-      console.log('THIS IS USERRESPONSE', userResponse)
       const userId = userResponse.body.id
 
 
