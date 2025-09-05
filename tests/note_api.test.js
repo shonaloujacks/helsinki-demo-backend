@@ -13,6 +13,7 @@ const api = supertest(app)
 describe('when there are initially some notes saved', () => {
   beforeEach(async () => {
     await Note.deleteMany({})
+    await User.deleteMany({})
     await Note.insertMany(helper.initialNotes)
   })
 
@@ -71,22 +72,26 @@ describe('when there are initially some notes saved', () => {
         password: 'testpassword'
       }
 
-      const userResponse = await api
+      await api
         .post('/api/users')
         .send(newUser)
         .expect(201)
-        .expect('Content-Type', /application\/json/)
-      const userId = userResponse.body.id
 
+      const loginResponse = await api
+        .post('/api/login')
+        .send({ username: newUser.username, password: newUser.password })
+        .expect(200)
+
+      const token = loginResponse.body.token
 
       const newNote = {
         content: 'async/await simplifies making async calls',
         important: true,
-        userId
       }
 
       await api
         .post('/api/notes')
+        .set('Authorization', `Bearer ${token}`)
         .send(newNote)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -94,14 +99,32 @@ describe('when there are initially some notes saved', () => {
       const notesAtEnd = await helper.notesInDb()
       assert.strictEqual(notesAtEnd.length, helper.initialNotes.length + 1)
 
-      const contents = notesAtEnd.map(n => n.content)
+      const contents = notesAtEnd.map(note => note.content)
       assert(contents.includes('async/await simplifies making async calls'))
     })
 
     test('fails with status code 400 if data invalid', async () => {
+      const newUser = {
+        username: 'shobieshoberson',
+        name: 'Shobie Shoberson',
+        password: 'testpassword'
+      }
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(201)
+
+      const loginResponse = await api
+        .post('/api/login')
+        .send({ username: newUser.username, password: newUser.password })
+        .expect(200)
+
+      const token = loginResponse.body.token
+
       const newNote = { important: true }
 
-      await api.post('/api/notes').send(newNote).expect(400)
+      await api.post('/api/notes').set('Authorization', `Bearer ${token}`).send(newNote).expect(400)
 
       const notesAtEnd = await helper.notesInDb()
 
