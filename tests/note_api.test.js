@@ -64,8 +64,9 @@ describe('when there are initially some notes saved', () => {
   })
 
   describe('addition of a new note', () => {
-    test('succeeds with valid data', async () => {
+    let loginResponse
 
+    beforeEach(async () => {
       const newUser = {
         username: 'shobieshoberson',
         name: 'Shobie Shoberson',
@@ -77,10 +78,13 @@ describe('when there are initially some notes saved', () => {
         .send(newUser)
         .expect(201)
 
-      const loginResponse = await api
+      loginResponse = await api
         .post('/api/login')
         .send({ username: newUser.username, password: newUser.password })
         .expect(200)
+    })
+
+    test('succeeds with valid data', async () => {
 
       const token = loginResponse.body.token
 
@@ -104,21 +108,6 @@ describe('when there are initially some notes saved', () => {
     })
 
     test('fails with status code 400 if data invalid', async () => {
-      const newUser = {
-        username: 'shobieshoberson',
-        name: 'Shobie Shoberson',
-        password: 'testpassword'
-      }
-
-      await api
-        .post('/api/users')
-        .send(newUser)
-        .expect(201)
-
-      const loginResponse = await api
-        .post('/api/login')
-        .send({ username: newUser.username, password: newUser.password })
-        .expect(200)
 
       const token = loginResponse.body.token
 

@@ -30,6 +30,13 @@ const usersInDb = async () => {
   return users.map(u => u.toJSON())
 }
 
+const newUser = {
+  username: 'shobieshoberson',
+  name: 'Shobie Shoberson',
+  password: 'testpassword'
+}
+
+
 module.exports = {
   initialNotes,
   nonExistingId,
